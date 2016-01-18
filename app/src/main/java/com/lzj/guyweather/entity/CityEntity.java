@@ -4,7 +4,7 @@ package com.lzj.guyweather.entity;
  * Created by Administrator on 1/18 0018.
  * City实体类
  */
-public class City {
+public class CityEntity {
 
     private int cityId;
     private String cityName;

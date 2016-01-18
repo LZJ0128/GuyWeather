@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Administrator on 1/18 0018.
+ * 建表类
  */
-public class DbHelper extends SQLiteOpenHelper {
+public class DBOpenHelper extends SQLiteOpenHelper {
 
     /**
      * Province建表语句
@@ -35,7 +36,7 @@ public class DbHelper extends SQLiteOpenHelper {
             "county_code text," +
             "city_id integer)";
 
-    public DbHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
+    public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){
         super(context, name, factory, version);
     }
 

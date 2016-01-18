@@ -4,7 +4,7 @@ package com.lzj.guyweather.entity;
  * Created by Administrator on 1/18 0018.
  * Province实体类
  */
-public class Province {
+public class ProvinceEntity {
 
     private int provinceId;
     private String provinceName;

@@ -4,7 +4,7 @@ package com.lzj.guyweather.entity;
  * Created by Administrator on 1/18 0018.
  * County实体类
  */
-public class County {
+public class CountyEntity {
 
     private int countyId;
     private String countyName;

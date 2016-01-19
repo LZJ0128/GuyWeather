@@ -20,7 +20,7 @@ public class Utility {
 
         if (!TextUtils.isEmpty(response)){
             String[] allProvinces = response.split(",");
-            if (allProvinces != null && allProvinces.length > 0){
+            if (allProvinces.length > 0){
                 for (String p : allProvinces){
                     String[] array = p.split("\\|");
                     ProvinceEntity provinceEntity = new ProvinceEntity();
@@ -42,7 +42,7 @@ public class Utility {
 
         if (!TextUtils.isEmpty(response)){
             String[] allCities = response.split(",");
-            if (allCities != null && allCities.length > 0){
+            if (allCities.length > 0){
                 for (String c : allCities){
                     String[] array = c.split("\\|");
                     CityEntity cityEntity = new CityEntity();
@@ -65,7 +65,7 @@ public class Utility {
 
         if (!TextUtils.isEmpty(response)){
             String[] allCounties = response.split(",");
-            if (allCounties != null && allCounties.length > 0){
+            if (allCounties.length > 0){
                 for (String c : allCounties){
                     String[] array = c.split("\\|");
                     CountyEntity countyEntity = new CountyEntity();

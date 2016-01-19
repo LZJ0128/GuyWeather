@@ -73,7 +73,7 @@ public class DBOperationHelper {
         if (cursor.moveToFirst()){
             while (cursor.moveToNext()){
                 ProvinceEntity entity = new ProvinceEntity();
-                //现根据key得到列下标，进而得到该列的value
+                //先根据key得到列下标，进而得到该列的value
                 entity.setProvinceId(cursor.getInt(cursor.getColumnIndex("id")));
                 entity.setProvinceName(cursor.getString(cursor.getColumnIndex("province_name")));
                 entity.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
@@ -88,10 +88,11 @@ public class DBOperationHelper {
      * 将City实例存储到数据库
      */
     public void saveCity(CityEntity cityEntity){
-        if (cityEntity == null){
+        if (cityEntity != null){
             ContentValues cv = new ContentValues();
             cv.put("city_name", cityEntity.getCityName());
             cv.put("city_code", cityEntity.getCityCode());
+            cv.put("province_id", cityEntity.getProvinceId());
             mDB.insert("city", null, cv);
         }
     }
@@ -99,10 +100,10 @@ public class DBOperationHelper {
     /**
      * 从数据库读取全国所有的City信息
      */
-    public List<CityEntity> loadCities(){
+    public List<CityEntity> loadCities(int provinceId){
         List<CityEntity> cityList = new ArrayList<CityEntity>();
-        String sql = "select * from city";
-        Cursor cursor = mDB.rawQuery(sql, null);
+        String sql = "select * from city where province_id=?";
+        Cursor cursor = mDB.rawQuery(sql, new String[]{String.valueOf(provinceId)});
         if (cursor.moveToFirst()){
             while (cursor.moveToNext()){
                 CityEntity entity = new CityEntity();
@@ -120,10 +121,11 @@ public class DBOperationHelper {
      * 将County实例存储到数据库
      */
     public void saveCounty(CountyEntity countyEntity){
-        if (countyEntity == null){
+        if (countyEntity != null){
             ContentValues cv = new ContentValues();
             cv.put("county_name", countyEntity.getCountyName());
             cv.put("county_code", countyEntity.getCountyCode());
+            cv.put("city_id", countyEntity.getCityId());
             mDB.insert("County", null, cv);
         }
     }
@@ -132,10 +134,10 @@ public class DBOperationHelper {
     /**
      * 从数据库读取全国所有的County信息
      */
-    public List<CountyEntity> loadCounties(){
+    public List<CountyEntity> loadCounties(int cityId){
         List<CountyEntity> countyList = new ArrayList<CountyEntity>();
-        String sql = "select * from county";
-        Cursor cursor = mDB.rawQuery(sql, null);
+        String sql = "select * from county where city_id=?";
+        Cursor cursor = mDB.rawQuery(sql, new String[]{String.valueOf(cityId)});
         if (cursor.moveToFirst()){
             while (cursor.moveToNext()){
                 CountyEntity entity = new CountyEntity();

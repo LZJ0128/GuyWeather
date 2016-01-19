@@ -6,7 +6,7 @@ package com.lzj.guyweather.util;
  */
 public interface HttpCallbackListener {
 
-    void onFinish(String response);
+    void onResponseSuccess(String response);
 
-    void onError(Exception e);
+    void onResponseError(Exception e);
 }

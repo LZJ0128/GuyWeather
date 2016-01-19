@@ -163,15 +163,18 @@ public class ChooseAreaActivity extends Activity {
     private void queryFromServer(final String code, final String type){
         String address;
         if (!TextUtils.isEmpty(code)){
+            //代号不为空时根据代号查询city或者county
             address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
         }else {
+            //代号为空时查询Province
             address = "http://www.weather.com.cn/data/list3/city.xml";
         }
         showProgressDialog();
         HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
             @Override
-            public void onFinish(String response) {
+            public void onResponseSuccess(String response) {
                 boolean result = false;
+                //把成功返回的数据分别保存到数据库
                 if ("province".equals(type)){
                     result = Utility.handleProvincesResponse(mDbOperationHelper, response);
                 } else if ("city".equals(type)){
@@ -186,6 +189,7 @@ public class ChooseAreaActivity extends Activity {
                         @Override
                         public void run() {
                             closeProgressDialog();
+                            //把本地保存的数据取出
                             if ("province".equals(type)){
                                 queryProvinces();
                             }else if ("city".equals(type)){
@@ -199,7 +203,7 @@ public class ChooseAreaActivity extends Activity {
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onResponseError(Exception e) {
                 //通过runOnUIThread()方法回到主线程处理逻辑
                 runOnUiThread(new Runnable() {
                     @Override

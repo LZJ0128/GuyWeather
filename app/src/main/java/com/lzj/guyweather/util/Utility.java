@@ -14,7 +14,7 @@ import com.lzj.guyweather.helper.DBOperationHelper;
 public class Utility {
 
     /**
-     * 解析和处理服务器返回的Province数据
+     * 解析和处理服务器返回的Province数据并保存到数据库
      */
     public synchronized static boolean handleProvincesResponse(DBOperationHelper dbOperationHelper, String response){
 
@@ -36,7 +36,7 @@ public class Utility {
     }
 
     /**
-     * 解析和处理服务器返回的City数据
+     * 解析和处理服务器返回的City数据并保存到数据库
      */
     public static boolean handleCityResponse(DBOperationHelper dbOperationHelper, String response, int provinceId){
 
@@ -59,7 +59,7 @@ public class Utility {
     }
 
     /**
-     * 解析和处理服务器返回的County数据
+     * 解析和处理服务器返回的County数据并保存到数据库
      */
     public static boolean handleCountyResponse(DBOperationHelper dbOperationHelper, String response, int cityId){
 

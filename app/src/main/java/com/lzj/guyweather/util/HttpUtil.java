@@ -12,6 +12,11 @@ import java.net.URL;
  */
 public class HttpUtil {
 
+    /**
+     * 发送数据请求
+     * @param address 请求的服务器地址
+     * @param listener  数据回调监听器
+     */
     public static void sendHttpRequest(final String address, final HttpCallbackListener listener){
         new Thread(new Runnable() {
             @Override
@@ -32,12 +37,12 @@ public class HttpUtil {
                     }
                     if (listener != null){
                         //回调onFinish()方法
-                        listener.onFinish(response.toString());
+                        listener.onResponseSuccess(response.toString());
                     }
                 }catch (Exception e){
                     if (listener != null){
                         //回调onError()方法
-                        listener.onError(e);
+                        listener.onResponseError(e);
                     }
                 }finally {
                     if (connection != null){

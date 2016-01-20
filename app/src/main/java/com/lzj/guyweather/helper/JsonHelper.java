@@ -23,6 +23,7 @@ public class JsonHelper {
      * @param response
      */
     public static void handleWeatherResponse(Context context, String response){
+
         try{
             JSONObject jsonObject = new JSONObject(response);
             JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
@@ -34,6 +35,7 @@ public class JsonHelper {
             String publishTime = weatherInfo.getString("ptime");
 
             saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -48,19 +50,24 @@ public class JsonHelper {
      * @param temp2
      * @param weatherDesp
      * @param publishTime
+     * city_selected用来后面判断城市是否选择，若为true则跳转页面
      */
     public static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1,
                                        String temp2, String weatherDesp, String publishTime){
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean("city_selected", true);//所选城市
+
+        editor.putBoolean("city_selected", true);//城市是否选择
         editor.putString("city_name", cityName);//城市名
         editor.putString("weather_code", weatherCode);//天气代号
-        editor.putString("temp1", temp1);//温度
-        editor.putString("temp2", temp2);//温度
-        editor.putString("weather_desp", weatherDesp);//天气
+        editor.putString("temp1", temp1);//温度1
+        editor.putString("temp2", temp2);//温度2
+        editor.putString("weather_desp", weatherDesp);//天气信息
         editor.putString("publish_time", publishTime);//发布时间
-        editor.putString("current_time", sdf.format(new Date()));//当前时间
+        editor.putString("current_date", sdf.format(new Date()));//当前日期
+
         editor.commit();
+
     }
 }

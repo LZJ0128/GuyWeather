@@ -36,12 +36,12 @@ public class HttpUtil {
                         response.append(line);
                     }
                     if (listener != null){
-                        //回调onFinish()方法
+                        //回调onResponseSuccess()方法
                         listener.onResponseSuccess(response.toString());
                     }
                 }catch (Exception e){
                     if (listener != null){
-                        //回调onError()方法
+                        //回调onResponseError()方法
                         listener.onResponseError(e);
                     }
                 }finally {

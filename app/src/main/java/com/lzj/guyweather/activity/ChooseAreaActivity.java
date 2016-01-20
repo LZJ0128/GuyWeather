@@ -2,7 +2,10 @@ package com.lzj.guyweather.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -67,8 +70,18 @@ public class ChooseAreaActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
+        isCitySelected();
         initUI();
         queryProvinces();
+    }
+
+    public void isCitySelected(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("city_selected", false)){
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
@@ -96,6 +109,12 @@ public class ChooseAreaActivity extends Activity {
             }else if (currentLevel == LEVEL_CITY){
                 mSelectedCity = mCityList.get(position);
                 queryCounties();
+            }else if (currentLevel == LEVEL_COUNTY){
+                String countyCode = mCountyList.get(position).getCountyCode();
+                Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                intent.putExtra("county_code", countyCode);
+                startActivity(intent);
+                finish();
             }
         }
     };

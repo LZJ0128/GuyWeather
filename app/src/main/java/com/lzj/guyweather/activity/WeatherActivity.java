@@ -1,12 +1,14 @@
 package com.lzj.guyweather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,13 +20,19 @@ import com.lzj.guyweather.util.HttpUtil;
 /**
  * Created by Administrator on 1/20 0020.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener{
 
     private LinearLayout mLinWeatherInfo;
+
     /**
      * 分别是：城市名，发布时间，天气信息，温度1，温度2，当前日期
      */
     private TextView mTxvCityName, mTxvPublish, mTxvWeatherDesp, mTxvTemp1, mTxvTemp2, mTxvCurrentDate;
+
+    /**
+     * 按钮：切换城市，手动刷新天气
+     */
+    private Button mBtnSwitchCity, mBtnRefreshWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -54,6 +62,40 @@ public class WeatherActivity extends Activity {
         mTxvTemp1= (TextView)findViewById(R.id.txv_temp1);
         mTxvTemp2= (TextView)findViewById(R.id.txv_temp2);
         mTxvCurrentDate = (TextView)findViewById(R.id.txv_current_date);
+        mBtnSwitchCity = (Button)findViewById(R.id.btn_switch_city);
+        mBtnRefreshWeather = (Button)findViewById(R.id.btn_refresh_weather);
+        mBtnSwitchCity.setOnClickListener(this);
+        mBtnRefreshWeather.setOnClickListener(this);
+    }
+
+    /**
+     * 点击事件
+     * @param v
+     */
+    @Override
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.btn_switch_city:
+                Intent intent = new Intent(this, ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity", true);//标志位（若直接跳转则又会跳转回来）
+                startActivity(intent);
+                finish();
+                break;
+
+            case R.id.btn_refresh_weather:
+                mTxvPublish.setText("同步中。。。");
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = pref.getString("weather_code", "");
+                if (!TextUtils.isEmpty(weatherCode)){
+                    //查询天气
+                    queryWeatherCode(weatherCode);
+                    mTxvPublish.setText("今天" + pref.getString("publish_time", "") + "发布");
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     /**
@@ -83,7 +125,9 @@ public class WeatherActivity extends Activity {
             public void onResponseSuccess(String response) {
                 if ("countyCode".equals(type)) {
                     if (!TextUtils.isEmpty(response)) {
-                        //从服务器返回的数据中解析出天气代号
+                        /**
+                         * 服务其返回的数据类似：190404|101190404 前者为县级代号，后者为该县级的天气代号
+                         */
                         String[] array = response.split("\\|");
                         if (array != null && array.length == 2) {
                             String weatherCode = array[1];
@@ -121,8 +165,8 @@ public class WeatherActivity extends Activity {
     private void showWeather(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         mTxvCityName.setText(preferences.getString("city_name", ""));
-        mTxvTemp1.setText(preferences.getString("temp1", ""));
-        mTxvTemp2.setText(preferences.getString("temp2", ""));
+        mTxvTemp1.setText(preferences.getString("temp2", ""));
+        mTxvTemp2.setText(preferences.getString("temp1", ""));
         mTxvWeatherDesp.setText(preferences.getString("weather_desp", ""));
         mTxvPublish.setText("今天" + preferences.getString("publish_time", "") + "发布");
         mTxvCurrentDate.setText(preferences.getString("current_date", ""));

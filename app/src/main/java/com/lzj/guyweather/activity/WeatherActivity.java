@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.lzj.guyweather.R;
 import com.lzj.guyweather.helper.JsonHelper;
+import com.lzj.guyweather.service.AutoUpdateService;
 import com.lzj.guyweather.util.HttpCallbackListener;
 import com.lzj.guyweather.util.HttpUtil;
 
@@ -172,5 +173,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mTxvCurrentDate.setText(preferences.getString("current_date", ""));
         mLinWeatherInfo.setVisibility(View.VISIBLE);
         mTxvCityName.setVisibility(View.VISIBLE);
+        //激活服务.8小时更新一次
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 }

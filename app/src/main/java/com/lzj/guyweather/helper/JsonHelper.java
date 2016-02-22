@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,6 +26,10 @@ public class JsonHelper {
     public static void handleWeatherResponse(Context context, String response){
 
         try{
+
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+
             JSONObject jsonObject = new JSONObject(response);
             JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
             String cityName = weatherInfo.getString("city");
@@ -32,7 +37,7 @@ public class JsonHelper {
             String temp1 = weatherInfo.getString("temp1");
             String temp2 = weatherInfo.getString("temp2");
             String weatherDesp = weatherInfo.getString("weather");
-            String publishTime = weatherInfo.getString("ptime");
+            String publishTime = String.valueOf(hour);
 
             saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
 
@@ -68,6 +73,5 @@ public class JsonHelper {
         editor.putString("current_date", sdf.format(new Date()));//当前日期
 
         editor.commit();
-
     }
 }

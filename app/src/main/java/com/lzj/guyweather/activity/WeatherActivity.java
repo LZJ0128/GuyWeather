@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      * 分别是：城市名，发布时间，天气信息，温度1，温度2，当前日期
      */
     private TextView mTxvCityName, mTxvPublish, mTxvWeatherDesp, mTxvTemp1, mTxvTemp2, mTxvCurrentDate;
-
+    private ImageView mImgWeather;
     /**
      * 按钮：切换城市，手动刷新天气
      */
@@ -67,6 +68,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         mBtnRefreshWeather = (Button)findViewById(R.id.btn_refresh_weather);
         mBtnSwitchCity.setOnClickListener(this);
         mBtnRefreshWeather.setOnClickListener(this);
+
+        mImgWeather = (ImageView)findViewById(R.id.img_weather);
+
     }
 
     /**
@@ -90,7 +94,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
                 if (!TextUtils.isEmpty(weatherCode)){
                     //查询天气
                     queryWeatherCode(weatherCode);
-                    mTxvPublish.setText("今天" + pref.getString("publish_time", "") + "发布");
+                    mTxvPublish.setText("今天" + pref.getString("publish_time", "") + ":00发布");
                 }
                 break;
 
@@ -114,6 +118,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
         String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
         queryFromServer(address, "weatherCode");
     }
+
 
     /**
      * 根据传入的地址和类型去向服务器查询天气代号或者天气信息
@@ -165,16 +170,39 @@ public class WeatherActivity extends Activity implements View.OnClickListener{
      */
     private void showWeather(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        showWeatherIcon(preferences.getString("weather_desp", ""));
         mTxvCityName.setText(preferences.getString("city_name", ""));
         mTxvTemp1.setText(preferences.getString("temp2", ""));
         mTxvTemp2.setText(preferences.getString("temp1", ""));
         mTxvWeatherDesp.setText(preferences.getString("weather_desp", ""));
-        mTxvPublish.setText("今天" + preferences.getString("publish_time", "") + "发布");
+        mTxvPublish.setText("今天" + preferences.getString("publish_time", "") + ":00发布");
         mTxvCurrentDate.setText(preferences.getString("current_date", ""));
         mLinWeatherInfo.setVisibility(View.VISIBLE);
         mTxvCityName.setVisibility(View.VISIBLE);
         //激活服务.8小时更新一次
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
+    }
+
+    private void showWeatherIcon(String weatherDesp){
+        switch (weatherDesp){
+            case "小雨":
+                mImgWeather.setImageResource(R.drawable.xiaoyu);
+                break;
+            case "多云":
+            case "阴转多云":
+            case "晴转多云":
+                mImgWeather.setImageResource(R.drawable.duoyun);
+                break;
+            case "阴":
+                mImgWeather.setImageResource(R.drawable.yintian);
+                break;
+            case "晴":
+                mImgWeather.setImageResource(R.drawable.qingtian);
+                break;
+            default:
+                mImgWeather.setVisibility(View.INVISIBLE);
+                break;
+        }
     }
 }
